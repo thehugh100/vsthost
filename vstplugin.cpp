@@ -2,6 +2,10 @@
 #include "common.h"
 #include <iostream>
 
+#include <math.h>
+#include <algorithm>
+#include <minmax.h>
+
 VstPlugin::VstPlugin()
     : editorHwnd(nullptr), hModule(nullptr), aEffect(nullptr)
 {}
@@ -223,7 +227,7 @@ bool VstPlugin::init(const wchar_t *vstModulePath)
 
     aEffect = vstEntryProc(hostCallback_static);
     ASSERT_THROW(aEffect && aEffect->magic == kEffectMagic, "Not a VST plugin")
-    ASSERT_THROW(flagsIsSynth(), "Not a VST Synth")
+    //ASSERT_THROW(flagsIsSynth(), "Not a VST Synth")
     aEffect->user = this;
 
     inputBuffer.resize(static_cast<size_t>(aEffect->numInputs) * getBlockSize());

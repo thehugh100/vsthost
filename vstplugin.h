@@ -10,8 +10,8 @@
 
 #pragma warning(push)
 #pragma warning(disable : 4996)
-#include <pluginterfaces/vst2.x/aeffectx.h>
-#include <public.sdk/source/vst2.x/audioeffect.h>
+#include "VST3 SDK/pluginterfaces/vst2.x/aeffectx.h"
+#include "VST3 SDK/public.sdk/source/vst2.x/audioeffect.h"
 #pragma warning(pop)
 
 class VstPlugin

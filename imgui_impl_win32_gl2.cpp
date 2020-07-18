@@ -2,7 +2,7 @@
 #include "imgui_impl_win32_gl2.h"
 
 #include <glad/glad.h>
-#include <GL/wglext.h>
+#include <GL/GL.h>
 #include <iostream>
 
 // GLFW data

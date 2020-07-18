@@ -8,7 +8,7 @@
 
 #include <glad/glad.h>
 
-#include <GL/wglext.h>
+#include <GL/GL.h>
 #include <algorithm>
 #include <chrono>
 #include <commdlg.h>

@@ -1,3 +1,20 @@
 VST3 SDK/*
 *.user
 *.dll
+*.tlog
+*.exe
+*.obj
+*.cmake
+*.db-wal
+*.db-shm
+*.db
+*.ipch
+bin/.vs/vsthost/v16/.suo
+*.opendb
+*.stamp
+*.log
+*.check_cache
+*.ilk
+*.pdb
+include/VST3 SDK*
+bin/

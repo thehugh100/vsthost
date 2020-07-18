@@ -36,10 +36,12 @@
 #include <thread>
 #include <functional>
 #include <vector>
+#include <filesystem>
 
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #include "VST3 SDK/pluginterfaces/vst2.x/aeffectx.h"
+
 #pragma warning(pop)
 
 #define ASSERT_THROW(c, e)           \
@@ -182,7 +184,7 @@ private:
 
         aEffect = vstEntryProc(hostCallback_static);
         ASSERT_THROW(aEffect && aEffect->magic == kEffectMagic, "Not a VST plugin");
-        ASSERT_THROW(flagsIsSynth(), "Not a VST Synth");
+        //ASSERT_THROW(flagsIsSynth(), "Not a VST Synth");
         aEffect->user = this;
 
         inputBuffer.resize(aEffect->numInputs * getBlockSize());
@@ -571,7 +573,7 @@ void mainLoop(const std::wstring& dllFilename)
         CW_USEDEFAULT, CW_USEDEFAULT, 240, 120,
         NULL, NULL, GetModuleHandle(NULL), NULL);
 
-    ShowWindow(hwnd, SW_SHOW);
+    ShowWindow(hwnd, SW_HIDE);
     UpdateWindow(hwnd);
 
     PIXELFORMATDESCRIPTOR format_desc = {
@@ -663,25 +665,50 @@ void mainLoop(const std::wstring& dllFilename)
     }
 }
 
-int main()
+int main(int argc, char**argv)
 {
     ComInit comInit{};
 
-    const auto dllFilename = []() -> std::wstring {
-        wchar_t fn[MAX_PATH + 1]{};
-        OPENFILENAME ofn{ sizeof(ofn) };
-        ofn.lpstrFilter = L"VSTi DLL(*.dll)\0*.dll\0All Files(*.*)\0*.*\0\0";
-        ofn.lpstrFile = fn;
-        ofn.nMaxFile = _countof(fn);
-        ofn.lpstrTitle = L"Select VST DLL";
-        ofn.Flags = OFN_FILEMUSTEXIST | OFN_ENABLESIZING;
-        GetOpenFileName(&ofn);
-        return fn;
-    }();
+    if (argc > 1)
+    {
+        if (std::filesystem::exists(argv[1]))
+        {
+            try
+            {
+                mainLoop(std::filesystem::path(argv[1]).generic_wstring());
+            }
+            catch (std::exception &e)
+            {
+                std::cout << "Exception : " << e.what() << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << "File does not exist" << std::endl;
+            exit(0);
+        }
+    }
+    else
+    {
+        const auto dllFilename = []() -> std::wstring {
+            wchar_t fn[MAX_PATH + 1]{};
+            OPENFILENAME ofn{sizeof(ofn)};
+            ofn.lpstrFilter = L"VSTi DLL(*.dll)\0*.dll\0All Files(*.*)\0*.*\0\0";
+            ofn.lpstrFile = fn;
+            ofn.nMaxFile = _countof(fn);
+            ofn.lpstrTitle = L"Select VST DLL";
+            ofn.Flags = OFN_FILEMUSTEXIST | OFN_ENABLESIZING;
+            GetOpenFileName(&ofn);
+            return fn;
+        }();
 
-    try {
-        mainLoop(dllFilename);
-    } catch (std::exception& e) {
-        std::cout << "Exception : " << e.what() << std::endl;
+        try
+        {
+            mainLoop(dllFilename);
+        }
+        catch (std::exception &e)
+        {
+            std::cout << "Exception : " << e.what() << std::endl;
+        }
     }
 }
