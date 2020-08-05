@@ -212,7 +212,7 @@ private:
             RegisterClassEx(&wcex);
 
             const auto style = WS_CAPTION | WS_THICKFRAME | WS_OVERLAPPEDWINDOW;
-            editorHwnd = CreateWindow(
+            editorHwnd = CreateWindowExW(WS_EX_APPWINDOW,
                 wcex.lpszClassName, vstModulePath, style, 0, 0, 0, 0, hWndParent, 0, 0, 0);
             dispatcher(effEditOpen, 0, 0, editorHwnd);
             RECT rc{};
